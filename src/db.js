@@ -1,15 +1,19 @@
 require("dotenv").config();
 const { Sequelize } = require("sequelize");
-
+//const DriverModel = require('./models/Driver');
+//const TeamModel = require('./models/Team');
 const fs = require('fs');
 const path = require('path');
-const {
-  DB_USER, DB_PASSWORD, DB_HOST,
-} = process.env;
+const { timeStamp } = require("console");
+const {DB_USER, DB_PASSWORD, DB_HOST,DB_NAME} = process.env;
 
-const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/drivers`, {
-  logging: false, 
-  native: false, 
+
+const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`, {
+     logging: false, 
+     native: false,
+     force:true
+   
+  
 });
 const basename = path.basename(__filename);
 
@@ -28,10 +32,21 @@ let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-const { Driver } = sequelize.models;
+const { Driver, Team } = sequelize.models;
 
 // Aca vendrian las relaciones
 // Product.hasMany(Reviews);
+// Relación muchos a muchos entre Conductores y Equipos
+Driver.belongsToMany(Team, {
+  through: 'DriverTeam',
+  timestamps: false, // Deshabilita la generación de timestamps
+});
+
+Team.belongsToMany(Driver, {
+  through: 'DriverTeam',
+  timestamps: false, // Deshabilita la generación de timestamps
+});
+
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
