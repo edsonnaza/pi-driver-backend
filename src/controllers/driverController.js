@@ -54,9 +54,9 @@ const createDriver = async (
 };
 
 const getDriversapi = async () => {
-  const peticion = (await axios.get("http://localhost:5000/drivers")).data;
+  const response = (await axios.get("http://localhost:5000/drivers")).data;
   let teamsArray = [];
-  const allDrivers = peticion.map((a) => {
+  const allDrivers = response.map((a) => {
     const { id, name, description, image, nationality, dob } = a;
     if (a.teams) {
       teamsArray = a.teams.split(",").map((team) => team.trim());
@@ -134,7 +134,7 @@ const getAllDrivers = async (name) => {
   const driversApi = await getDriversapi();
   const driversDB = await getDriversDB();
   const allDrivers = [...driversApi, ...driversDB];
-  if (!allDrivers.length) throw new Error("No se encontraron Conductores");
+  if (!allDrivers.length) throw new Error("No drivers found");
   if (name) {
     const filterDrivers = allDrivers.filter(
       (d) =>
