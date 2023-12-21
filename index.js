@@ -5,7 +5,7 @@ const PORT = 3003;
 
 
 // Sincronizar la base de datos
-conn.sync()
+conn.sync({force:true})
   .then(() => {
     console.log('Database synchronized and connected');
   }).then(()=>{
