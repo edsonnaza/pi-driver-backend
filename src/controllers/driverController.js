@@ -13,45 +13,59 @@ const createDriver = async (
   dob,
   teams
 ) => {
-  if(!image_url) image_url= backup
-  else if(image_url.length<4) image_url= backup
+  if (!image_url) image_url = backup;
+  else if (image_url.length < 4) image_url = backup;
 
-  
-  const newDriver = await Drivers.create({
-    forename,
-    lastname,
-    description,
-    image_url,
-    nationality,
-    dob,
-  });
+  try {
+    // Crear el conductor
+    const newDriver = await Driver.create({
+      forename,
+      lastname,
+      description,
+      image_url,
+      nationality,
+      dob,
+    });
 
-  const foundTeams = await Promise.all(
-    teams.map(async (t) => {
-      const [createdTeam] = await Teams.findOrCreate({
-        where: { teams: t },
-      });
-      return createdTeam;
-    })
-  );
+    // Buscar o crear equipos y asociarlos al conductor
+    const foundTeams = await Promise.all(
+      teams.map(async (teamName) => {
+        const [createdTeam, created] = await Team.findOrCreate({
+          where: { name: teamName },
+        });
 
-  await newDriver.addTeams(foundTeams);
-  const teamsArray = foundTeams.map((t) => t.teams);
- 
+        if (!created) {
+          // El equipo ya existía, puedes hacer algún manejo aquí si es necesario
+          console.log(`Team '${teamName}' already existed.`);
+        }
 
-  return {
-    id: newDriver.id,
-    forename: newDriver.forename,
-    lastname: newDriver.lastname,
-    description: newDriver.description,
-    image_url: newDriver.image_url,
-    nationality: newDriver.nationality,
-    dob: newDriver.dob,
-    teams: teamsArray,
-    api:false
-    
-  };
+        return createdTeam;
+      })
+    );
+
+    // Associate the teams with the driver  
+    await newDriver.addTeams(foundTeams);
+
+    // Get the team names to include at the response data.
+    const teamsArray = foundTeams.map((team) => team.name);
+
+    return {
+      id: newDriver.id,
+      forename: newDriver.forename,
+      lastname: newDriver.lastname,
+      description: newDriver.description,
+      image_url: newDriver.image_url,
+      nationality: newDriver.nationality,
+      dob: newDriver.dob,
+      teams: teamsArray,
+      api: false,
+    };
+  } catch (error) {
+    console.error("Error creating driver:", error);
+    throw new Error("Error creating driver.");
+  }
 };
+
 
 const getDriversapi = async () => {
   const response = (await axios.get("http://localhost:5000/drivers")).data;
@@ -111,7 +125,7 @@ const getDriversDB = async () => {
 
   const cleanDrivers = await Promise.all(
     allDrivers.map(async (d) => {
-      const teamsArray = d.Teams.map((team) => team.teams);
+      const teamsArray = d.Teams.map((team) => team.name);
       return {
         id: d.id,
         forename: d.forename,

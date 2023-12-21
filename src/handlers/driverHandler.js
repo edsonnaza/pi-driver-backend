@@ -38,9 +38,9 @@ const {getAllDrivers,createDriver} = require("../controllers/driverController");
   };
   
   const driverPostCreateNew = async (req, res) => {
-    const { forename, lastname, description, image_url, nationality, dob } =  req.body;
+    const { forename, lastname, description, image_url, nationality, dob,teams } =  req.body;
     try {
-      const response = await createDriver( forename, lastname, description, image_url, nationality, dob )
+      const response = await createDriver( forename, lastname, description, image_url, nationality, dob,teams )
   
       res.status(200).json(response);
       
