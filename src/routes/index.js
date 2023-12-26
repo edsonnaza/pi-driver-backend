@@ -7,7 +7,7 @@ const teams = require('./teamRoutes');
 
 router.get('/', function (req, res) {
     //Ruta para un GET a /
-    res.send('Wellcome to F1 world drivers!'); // response "Hola mundo!" en la pagina principal
+    res.send('Wellcome to F1 World Drivers!'); // response "Hola mundo!" en la pagina principal
  });
 router.use('/',drivers);
 router.use('/',teams);

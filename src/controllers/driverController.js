@@ -17,7 +17,7 @@ const createDriver = async (
   else if (image_url.length < 4) image_url = backup;
 
   try {
-    // Crear el conductor
+    // Create the driver
     const newDriver = await Driver.create({
       forename,
       lastname,
@@ -27,7 +27,7 @@ const createDriver = async (
       dob,
     });
 
-    // Buscar o crear equipos y asociarlos al conductor
+    // Search or create teams and and associate with the driver
     const foundTeams = await Promise.all(
       teams.map(async (teamName) => {
         const [createdTeam, created] = await Team.findOrCreate({
@@ -35,7 +35,7 @@ const createDriver = async (
         });
 
         if (!created) {
-          // El equipo ya existía, puedes hacer algún manejo aquí si es necesario
+          // The team exists already 
           console.log(`Team '${teamName}' already existed.`);
         }
 

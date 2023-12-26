@@ -5,7 +5,7 @@ const {getAllDrivers,createDriver} = require("../controllers/driverController");
     try {
       if (name) {
         const allDrivers = await getAllDrivers(name);
-        //* Only 15 first drivers
+        //* Only 15th first's drivers.
         const response = allDrivers.slice(0, 15); 
         return res.status(200).json(response);
       }
@@ -42,7 +42,7 @@ const {getAllDrivers,createDriver} = require("../controllers/driverController");
     try {
       const response = await createDriver( forename, lastname, description, image_url, nationality, dob,teams )
   
-      res.status(200).json(response);
+      res.status(201).json(response);
       
     } catch (error) {
         res.status(404).json(error.message);    
