@@ -2,6 +2,7 @@ const {getAllDrivers,createDriver} = require("../controllers/driverController");
   
   const driverGetQuery = async (req, res) => {
     const { name } = req.query;
+    
     try {
       if (name) {
         const allDrivers = await getAllDrivers(name);

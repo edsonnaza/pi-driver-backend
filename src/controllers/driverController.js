@@ -155,6 +155,7 @@ const getAllDrivers = async (name) => {
         d.forename.toLowerCase().includes(name.toLowerCase()) ||
         d.lastname.toLowerCase().includes(name.toLowerCase())
     );
+    if(!filterDrivers.length) throw new Error("No drivers found");
     return filterDrivers;
   }
 
