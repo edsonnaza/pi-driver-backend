@@ -5,15 +5,19 @@ const { Sequelize } = require("sequelize");
 const fs = require('fs');
 const path = require('path');
 const { timeStamp } = require("console");
-const {DB_USER, DB_PASSWORD, DB_HOST,DB_NAME} = process.env;
+const {DB_USER, DB_PASSWORD, DB_HOST,DB_NAME, DB_DEPLOY} = process.env;
 
 
-const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`, {
-      loggin:false,
+//const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`, {
+const sequelize = new Sequelize(DB_DEPLOY, { 
+loggin:false,
      native: false,
      force:true,
     // logging:(msg) => console.log(msg)
-   
+    dialectOptions: {
+      ssl: true,
+      sslmode: 'require',
+    },
   
 });
 const basename = path.basename(__filename);

@@ -1,7 +1,7 @@
 const axios = require("axios");
 const server = require("./src/server");
 const { conn } = require('./src/db.js');
-const PORT = 3003;
+const PORT =process.env.PORT || 3003;
 
 
 // Sincronizar la base de datos
